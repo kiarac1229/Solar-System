@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<head>
+<title>Phases of the Moon</title>
+<script src="three.min.js"></script>
+<script src = "universe-background.jpg"></script>
+<style>
+  canvas {
+    background-image: url("universe-background.jpg");
+    background-size: 100%100%;
+  }
+</style>
+
+<!-- Kiara Correa Acosta
+    Date: November 9, 2020
+-->
+<script>
+    var canvas;  // The canvas on which the image is rendered.
+
+    var dirLight; // Our directional light is global so we can change its position.
+    var angle;    // The angle (about the y-axis) of the directional light.
+
+    var earthSphere, sunSphere, moonSphere, earthOrbit, mercurySphere, venusSphere,marsSphere,jupiterSphere, saturnSphere, uranusSphere, neptuneSphere, marsMoonSphere,saturnRing;
+
+    var segments = 20, rings = 20;
+
+    function createWorld() {
+        
+      renderer.setClearColor(0x000000,0); // Set background color (0, or 0x000000, is black).
+        scene = new THREE.Scene(); // Create a new scene which we can add objects to.
+    
+        // create a camera, sitting on the positive z-axis.  The camera is not part of the scene.
+        camera = new THREE.PerspectiveCamera(45, canvas.width/canvas.height, 0.1, 700);
+        camera.position.z = 300; // pull back the camera
+
+        // directional light
+        dirLight = new THREE.DirectionalLight("white", 0.7);
+        dirLight.position.set(1,0,0);
+        scene.add(dirLight);
+
+        ambientLight = new THREE.AmbientLight( 0x313041,0.5); 
+        ambientLight.position.set(500,1,1);
+        scene.add( ambientLight );
+
+        // point light for the sun
+        const pointLight = new THREE.PointLight( "white", 1, 0, 0 );
+        pointLight.position.set(30, 0, 0 );
+        scene.add( pointLight );
+
+        // set up the sphere vars
+        var sunRadius = 40;
+        // create the sphere's material
+        var sunGeometry = new THREE.SphereGeometry(sunRadius, segments, rings);
+        var sunMaterial = new THREE.MeshLambertMaterial({ color: 0xf5bd1f ,emissive: 0xff8439, emissiveIntensity: 0.9});
+        sunSphere = new THREE.Mesh(sunGeometry, sunMaterial);
+        sunSphere.position.set(30,0,0);
+     
+      //mercury 
+      mercuryOrbit = new THREE.Object3D();
+      mercuryOrbit.position.set(30,0,0);
+      scene.add(mercuryOrbit)
+        var mercuryRadius = 5;
+        var mercurySphereGeometry = new THREE.SphereGeometry(mercuryRadius,segments, rings);
+        var mercurySphereMaterial = new THREE.MeshLambertMaterial({ color: 0xd5d2d1, emissive: "lightgrey", emissiveIntensity: 0.1 });
+        mercurySphere = new THREE.Mesh(mercurySphereGeometry, mercurySphereMaterial);
+        scene.add(mercurySphere);
+        mercuryOrbit.add(mercurySphere);
+        mercurySphere.position.set(50,0,0);
+        mercuryOrbit.add(mercurySphere);
+
+      //venus
+      venusOrbit = new THREE.Object3D();
+      venusOrbit.position.set(30,0,0);
+      scene.add(venusOrbit)
+        var venusRadius = 7;
+        var venusSphereGeometry = new THREE.SphereGeometry(venusRadius, segments, rings);
+        var venusSphereMaterial = new THREE.MeshLambertMaterial({ color: 0xFBB7AB});
+        venusSphere = new THREE.Mesh(venusSphereGeometry, venusSphereMaterial);
+        scene.add(venusSphere);
+        venusOrbit.add(venusSphere);
+        venusSphere.position.set(70,0,0);
+        venusOrbit.add(venusSphere);
+
+         // earth
+        earthOrbit = new THREE.Object3D();
+        earthOrbit.position.set(30,0,0);
+        scene.add(earthOrbit);
+        var earthRadius = 8;
+        var earthSphereGeometry = new THREE.SphereGeometry(earthRadius, segments, rings);
+        var earthSphereMaterial = new THREE.MeshLambertMaterial({ color: "green", emissive: "blue", emissiveIntensity: 0.4});
+        earthSphere = new THREE.Mesh(earthSphereGeometry, earthSphereMaterial);
+        scene.add(earthSphere);
+        earthOrbit.add(earthSphere);
+        earthSphere.position.set(90,0,0);
+
+      // moon 
+        var moonRadius = 3;
+        var moonSphereGeometry = new THREE.SphereGeometry(moonRadius, segments, rings);
+        var moonSphereMaterial = new THREE.MeshLambertMaterial({ color: "white" });
+        moonSphere = new THREE.Mesh(moonSphereGeometry, moonSphereMaterial);
+        scene.add(moonSphere);
+        moonSphere.position.set(13,0,0)
+        earthSphere.add(moonSphere);
+
+      //mars
+        marsOrbit = new THREE.Object3D();
+        marsOrbit.position.set(30,0,0);
+        scene.add(marsOrbit)
+        var marsRadius = 5;
+        var marsSphereGeometry = new THREE.SphereGeometry(marsRadius, segments, rings);
+        var marsSphereMaterial = new THREE.MeshLambertMaterial({ color: 0xff9966});
+        marsSphere = new THREE.Mesh(marsSphereGeometry, marsSphereMaterial);
+        scene.add(marsSphere);
+        marsOrbit.add(marsSphere);
+        marsSphere.position.set(115,0,0);
+        marsOrbit.add(marsSphere);
+        
+         //jupiter
+        jupiterOrbit = new THREE.Object3D();
+        jupiterOrbit.position.set(30,0,0);
+        scene.add(jupiterOrbit)
+        var jupiterRadius = 13;
+        var jupiterSphereGeometry = new THREE.SphereGeometry(jupiterRadius, segments, rings);
+        var jupiterSphereMaterial = new THREE.MeshLambertMaterial({ color: 0xe9c4bc});
+        jupiterSphere = new THREE.Mesh(jupiterSphereGeometry, jupiterSphereMaterial);
+        scene.add(jupiterSphere);
+        jupiterOrbit.add(jupiterSphere);
+        jupiterSphere.position.set(140,0,0);
+        jupiterOrbit.add(jupiterSphere);
+
+        //saturn
+        saturnOrbit = new THREE.Object3D();
+        saturnOrbit.position.set(30,0,0);
+        scene.add(saturnOrbit)
+        var saturnRadius = 9;
+        var saturnSphereGeometry = new THREE.SphereGeometry(saturnRadius, segments, rings);
+        var saturnSphereMaterial = new THREE.MeshLambertMaterial({ color: 0xC3A171});
+        saturnSphere = new THREE.Mesh(saturnSphereGeometry, saturnSphereMaterial);
+        scene.add(saturnSphere);
+        saturnOrbit.add(saturnSphere);
+        saturnSphere.position.set(165,0,0);
+        saturnOrbit.add(saturnSphere);
+
+        // saturn ring
+        var saturnRingGeometry = new THREE.TorusGeometry( 13, 1, 16, 100 );
+        var saturnRingSphereMaterial = new THREE.MeshLambertMaterial({ color: "tan" });
+        saturnRing = new THREE.Mesh(saturnRingGeometry,saturnRingSphereMaterial)
+        scene.add(saturnRing)
+        saturnSphere.add(saturnRing)
+        
+        //uranus
+        uranusOrbit = new THREE.Object3D();
+        uranusOrbit.position.set(30,0,0);
+        scene.add(uranusOrbit)
+        var uranusRadius = 6;
+        var uranusSphereGeometry = new THREE.SphereGeometry(uranusRadius, segments, rings);
+        var uranusSphereMaterial = new THREE.MeshLambertMaterial({ color: 0x4FD0E7});
+        uranusSphere = new THREE.Mesh(uranusSphereGeometry, uranusSphereMaterial);
+        scene.add(uranusSphere);
+        uranusOrbit.add(uranusSphere);
+        uranusSphere.position.set(180,0,0);
+        uranusOrbit.add(uranusSphere);
+
+        //neptune
+        neptuneOrbit = new THREE.Object3D();
+        neptuneOrbit.position.set(30,0,0);
+        scene.add(neptuneOrbit)
+        var neptuneRadius = 6;
+        var neptuneSphereGeometry = new THREE.SphereGeometry(neptuneRadius, segments, rings);
+        var neptuneSphereMaterial = new THREE.MeshLambertMaterial({ color: 0x3E66F9});
+        neptuneSphere = new THREE.Mesh(neptuneSphereGeometry, neptuneSphereMaterial);
+        scene.add(neptuneSphere);
+        neptuneOrbit.add(neptuneSphere);
+        neptuneSphere.position.set(190,0,0);
+        neptuneOrbit.add(neptuneSphere);
+        scene.add(sunSphere);
+}
+
+    // Render the scene. This is called for each frame of the animation.
+    function render() {
+        requestAnimationFrame( render );
+
+        mercuryOrbit.rotation.z += 0.05;
+        venusOrbit.rotation.z += 0.04;
+        earthOrbit.rotation.z += 0.017;
+        marsOrbit.rotation.z += 0.026;
+        jupiterOrbit.rotation.z += 0.035;
+        saturnOrbit.rotation.z += 0.027;
+        uranusOrbit.rotation.z += 0.009;
+        neptuneOrbit.rotation.z += 0.005;
+
+        sunSphere.rotation.y += 0.01;
+        mercurySphere.rotation.y += 0.028;
+        venusSphere.rotation.y += 0.02;
+        earthSphere.rotation.z += 0.1;
+        marsSphere.rotation.y +=0.016;
+        jupiterSphere.rotation.y += 0.023;
+        saturnSphere.rotation.y += 0.021;
+        uranusSphere.rotation.y += 0.01;
+        neptuneSphere.rotation.y += 0.009;
+
+        renderer.render(scene, camera);
+    }
+
+    //----------------------------------------------------------------------------------
+
+    // The init() function is called by the onload event when the document has loaded.
+    function init() {
+        try {
+            canvas = document.getElementById("glcanvas");
+            renderer = new THREE.WebGLRenderer( { canvas: canvas, antialias: true, alpha:true} );
+        }
+        catch (e) {
+            document.getElementById("canvas-holder").innerHTML = "<h3><b>WebGL is not available.</b><h3>";
+            return;
+        }
+    
+        // create world and render scene
+        createWorld();
+        render();
+    }
+
+</script>
+
+</head>
+<body onload="init()">
+<div id="canvas-holder">
+    <canvas id="glcanvas" width="600" height="400"></canvas>
+    
+</div>
+</body>
+</html>
